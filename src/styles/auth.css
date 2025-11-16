@@ -1,0 +1,72 @@
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 16px; /* more padding for breathing space */
+}
+
+.auth-page h2 {
+  font-size: 36px; /* bigger heading */
+  color: var(--accent);
+  margin-bottom: 32px; /* spacing between heading and form */
+  text-align: center;
+  text-shadow: 0 4px 8px rgba(108,92,231,0.2); /* subtle 3D effect */
+}
+
+.auth-card {
+  background: var(--card);
+  padding: 36px 32px; /* increased padding */
+  border-radius: 16px;
+  width: 400px; /* slightly wider */
+  max-width: 90%;
+  box-shadow: 0 12px 36px rgba(16,24,40,0.12);
+}
+
+.auth-form label {
+  display: block;
+  margin-bottom: 18px; /* more spacing between inputs */
+  font-size: 15px;
+  color: #374151;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 6px;
+  border: 1px solid #e6e9ef;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.btn {
+  margin-top: 24px; /* spacing from last input */
+  padding: 16px 0;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
+.btn:hover {
+  background: #5a4bcf;      /* slightly darker on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+}
+
+.btn.outline {
+  background: transparent;
+  color: #6c5ce7;
+  border: 2px solid #6c5ce7;
+}
+
+.btn.outline:hover {
+  background: #6c5ce7;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+}
+
+.btn.large {
+  width: auto;             /* for Landing CTA buttons */
+  padding: 14px 28px;
+  font-size: 16px;
+}
+

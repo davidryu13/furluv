@@ -1,0 +1,27 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background: linear-gradient(90deg, #ffe6e1 0%, #fff8f5 100%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ff6f61;
+}
+
+.nav-right .btn {
+  margin-left: 16px;
+}
+
+.btn.small {
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+}
