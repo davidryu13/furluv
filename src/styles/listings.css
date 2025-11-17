@@ -1,0 +1,27 @@
+.listings-page {
+  background-color: #d1fae5;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.listings-page h2 {
+  color: #059669;
+}
+
+.listing-card {
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+
+.listing-card h3 {
+  margin: 0 0 10px 0;
+  color: #065f46;
+}
+
+.listing-card p {
+  margin: 0;
+  color: #374151;
+}

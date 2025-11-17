@@ -1,0 +1,38 @@
+.transactions-page {
+  background-color: #fef2f2;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.transactions-page h2 {
+  color: #b91c1c;
+}
+
+.transaction-card {
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+
+.transaction-card p {
+  margin: 5px 0;
+  color: #374151;
+}
+
+.transaction-card .status {
+  font-weight: bold;
+}
+
+.transaction-card .pending {
+  color: #d97706;
+}
+
+.transaction-card .completed {
+  color: #16a34a;
+}
+
+.transaction-card .cancelled {
+  color: #dc2626;
+}

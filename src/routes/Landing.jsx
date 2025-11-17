@@ -1,28 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getCurrentUser } from '../utils/auth';
 import '../styles/landing.css';
 
 export default function Landing() {
-  const user = getCurrentUser();
-
   return (
     <main className="landing">
       <section className="hero">
         <div className="hero-left">
           <h1>Welcome to FurLuv</h1>
           <p>The social home for pets and their humans — connect, share, and explore breeding options responsibly.</p>
-          {!user ? (
-            <div className="cta-buttons">
-              <Link to="/register" className="btn large">Create Account</Link>
-              <Link to="/login" className="btn outline large">Login</Link>
-            </div>
-          ) : (
-            <div>
-              <p>Hi, <strong>{user.username}</strong> — ready to check your pet's profile?</p>
-              <Link to="/" className="btn large">Go to Feed</Link>
-            </div>
-          )}
+          <div className="cta-buttons">
+            <Link to="/register" className="btn large">Create Account</Link>
+            <Link to="/login" className="btn outline large">Login</Link>
+          </div>
         </div>
         <div className="hero-right">
           <img src="/assets/pet-illustration.jpg" alt="cute pets" className="hero-img"/>

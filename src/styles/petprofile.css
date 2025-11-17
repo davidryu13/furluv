@@ -1,0 +1,27 @@
+.pet-profile-page {
+  background-color: #fef3c7;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.pet-profile-page h2 {
+  color: #b45309;
+}
+
+.pet-card {
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+
+.pet-card h3 {
+  margin: 0 0 10px 0;
+  color: #78350f;
+}
+
+.pet-card p {
+  margin: 0;
+  color: #4b5563;
+}

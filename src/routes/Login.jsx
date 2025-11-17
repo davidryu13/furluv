@@ -4,7 +4,7 @@ import AuthForm from '../components/AuthForm';
 import { login } from '../utils/auth';
 import '../styles/auth.css';
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -28,7 +28,11 @@ export default function Login() {
       return;
     }
 
-    navigate('/');
+    // Update app state if you have a global user context
+    onLogin?.(res.user || { email: form.email });
+
+    // Redirect to dashboard after successful login
+    navigate('/dashboard');
   }
 
   return (

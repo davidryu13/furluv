@@ -28,7 +28,8 @@ export default function Register() {
       return;
     }
 
-    navigate('/');
+    // Redirect to login after successful registration
+    navigate('/login');
   }
 
   return (
