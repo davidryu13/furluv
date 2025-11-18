@@ -1,12 +1,10 @@
-import React from 'react';
+// src/components/AuthForm.jsx
+import React from "react";
 
-export default function AuthForm({ children, onSubmit, submitLabel }) {
+export default function AuthForm({ children, onSubmit }) {
   return (
-    <div className="auth-card">
-      <form onSubmit={onSubmit} className="auth-form">
-        {children}
-        <button type="submit" className="btn">{submitLabel}</button>
-      </form>
-    </div>
+    <form className="auth-form" onSubmit={onSubmit}>
+      {children}
+    </form>
   );
 }
