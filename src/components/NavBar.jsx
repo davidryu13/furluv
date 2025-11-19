@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiFillHome } from 'react-icons/ai';
-import { FaPaw } from 'react-icons/fa';
+import { FaPaw, FaEnvelope } from 'react-icons/fa';
 import { FiUser } from 'react-icons/fi';
 import '../styles/navbar.css';
 
@@ -20,7 +20,7 @@ export default function NavBar({ user, onLogout, onSearch }) {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    if (onSearch) onSearch(e.target.value); // call parent search handler
+    if (onSearch) onSearch(e.target.value);
   };
 
   return (
@@ -32,7 +32,6 @@ export default function NavBar({ user, onLogout, onSearch }) {
       <div className="navbar-right">
         {isDashboard && (
           <>
-            {/* Search bar */}
             <input
               type="text"
               className="navbar-search"
@@ -41,7 +40,6 @@ export default function NavBar({ user, onLogout, onSearch }) {
               onChange={handleSearchChange}
             />
 
-            {/* Dashboard Icons */}
             <AiFillHome
               className="nav-icon"
               title="Home"
@@ -51,6 +49,11 @@ export default function NavBar({ user, onLogout, onSearch }) {
               className="nav-icon"
               title="Listings"
               onClick={() => navigate("/dashboard/listings")}
+            />
+            <FaEnvelope
+              className="nav-icon"
+              title="Messages"
+              onClick={() => navigate("/dashboard/messages")}
             />
             <div className="profile-dropdown">
               <FiUser
