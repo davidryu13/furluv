@@ -13,14 +13,16 @@ export default function PetProfile({ pets = [], setPets, user }) {
   const [editData, setEditData] = useState({});
 
   useEffect(() => {
+    console.log("[PetProfile] useEffect - finding pet with id:", id);
     const foundPet = findPetById(pets, id);
     if (!foundPet) {
+      console.warn("[PetProfile] Pet not found, redirecting...");
       navigate("/dashboard/owner-profile");
       return;
     }
     setPet(foundPet);
     setEditData({ ...foundPet });
-  }, [id, pets]);
+  }, [id, pets, navigate]);
 
   if (!pet) return null;
 
@@ -41,8 +43,22 @@ export default function PetProfile({ pets = [], setPets, user }) {
   };
 
   const submitEdit = () => {
-    setPets(pets.map(p => (p.id === pet.id ? { ...editData } : p)));
-    setPet({ ...editData });
+    console.log("[PetProfile] Saving pet edit:", editData);
+    const petId = pet.id;
+
+    const updatedPet = {
+      ...editData,
+      id: petId,
+      age: Number(editData.age),
+    };
+
+    setPets((prevPets) => {
+      const updatedPets = prevPets.map((p) => (p.id === petId ? updatedPet : p));
+      console.log("[PetProfile] Updated pets array:", updatedPets);
+      return updatedPets;
+    });
+
+    setPet(updatedPet);
     setShowEditPopup(false);
   };
 

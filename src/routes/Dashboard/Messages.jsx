@@ -1,5 +1,6 @@
 // src/routes/Dashboard/Messages.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "../../styles/messages.css";
 
 const mockChats = [
@@ -9,12 +10,28 @@ const mockChats = [
 ];
 
 export default function Messages() {
-  const [selectedChat, setSelectedChat] = useState(mockChats[0]);
+  const location = useLocation();
+  const incomingUser = location.state?.user;
+
+  // Find if incomingUser exists in mockChats, else default to first chat
+  const initialChat = incomingUser
+    ? mockChats.find(chat => chat.name === incomingUser.name) || { ...incomingUser, id: Date.now(), lastMessage: '', status: 'offline' }
+    : mockChats[0];
+
+  const [selectedChat, setSelectedChat] = useState(initialChat);
   const [messages, setMessages] = useState([
     { sender: "owner", text: "Hi! Are you available for the breeding session?" },
     { sender: "user", text: "Yes! I am available tomorrow." },
   ]);
   const [newMessage, setNewMessage] = useState("");
+
+  // Reset messages when selectedChat changes
+  useEffect(() => {
+    setMessages([
+      { sender: "owner", text: `Hi ${selectedChat.name}! Are you available for the breeding session?` },
+      { sender: "user", text: "Yes! I am available tomorrow." },
+    ]);
+  }, [selectedChat]);
 
   const sendMessage = () => {
     if (!newMessage.trim()) return;
@@ -32,13 +49,7 @@ export default function Messages() {
             <div
               key={chat.id}
               className={`chat-contact ${selectedChat.id === chat.id ? "active" : ""}`}
-              onClick={() => {
-                setSelectedChat(chat);
-                setMessages([
-                  { sender: "owner", text: "Hi! Are you available for the breeding session?" },
-                  { sender: "user", text: "Yes! I am available tomorrow." },
-                ]);
-              }}
+              onClick={() => setSelectedChat(chat)}
             >
               <span className={`status-dot ${chat.status}`}></span>
               <div className="contact-info">

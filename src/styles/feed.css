@@ -1,138 +1,333 @@
+/* Feed page background and padding */
 .feed-page {
-  background-color: #e0e7ff;
-  padding: 20px;
+  padding: 30px 0;
+  background: linear-gradient(135deg, #e0f0ff, #ffffff);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.feed-page h2 {
-  color: #4f46e5;
+/* Feed title styling */
+.feed-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #003366; /* deeper navy */
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Container for vertical feed */
+/* Container with consistent width, centered */
 .feed-container {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  align-items: center;
+  gap: 28px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
-/* Each post as a larger rectangle */
-.feed-post {
-  background-color: white;
-  width: 600px; /* wider rectangle */
-  border-radius: 15px;
+/* Post card with hover effect and animation */
+.feed-card {
+  background: #fff;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0px 6px 16px rgba(0,0,0,0.12);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.feed-post:hover {
-  transform: translateY(-3px);
-  box-shadow: 0px 10px 24px rgba(0,0,0,0.15);
-}
-
-/* Image on top */
-.post-image {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
-  height: 300px; /* bigger image */
-  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideIn 0.5s forwards;
 }
 
-.post-image img {
+.feed-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation */
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Image styling */
+.feed-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-bottom: 2px solid #e3eaf5;
+  transition: filter 0.3s ease;
 }
 
-.post-image img:hover {
-  transform: scale(1.05);
+.feed-card:hover .feed-img {
+  filter: brightness(0.95);
 }
 
-/* Content below image */
-.post-content {
-  padding: 15px 20px;
+/* Caption styling */
+.feed-caption {
+  padding: 16px 20px;
 }
 
-.post-content h3 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  color: #1f2937;
+.feed-caption h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a2e6e;
 }
 
-.post-content p {
+.feed-caption p {
   margin: 0;
-  font-size: 14px;
-  color: #374151;
+  font-size: 15px;
+  color: #555555;
+  line-height: 1.5;
 }
 
-/* Actions */
+/* Actions (heart/comment) with bounce on click */
 .feed-actions {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 20px;
+  gap: 22px;
+  padding: 12px 20px;
+  font-size: 24px;
+  color: #666666;
 }
 
-.heart, .comment-icon {
-  font-size: 22px;
+.heart,
+.comment-icon {
   cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: color 0.3s ease;
 }
 
-.heart:hover, .comment-icon:hover {
+.heart:hover {
+  color: #e63946;
   transform: scale(1.2);
 }
 
 .heart.liked {
-  color: #e0245e;
+  color: #e63946;
+  animation: heartBeat 0.6s ease forwards;
 }
 
-/* Comments */
+@keyframes heartBeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+}
+
+.comment-icon:hover {
+  color: #457b9d;
+  transform: scale(1.2);
+}
+
+/* Comments section styling */
 .comment-section {
-  border-top: 1px solid #c7d2fe;
-  padding: 10px 20px;
-  animation: fadeIn 0.3s ease;
+  padding: 14px 20px;
+  border-top: 1px solid #eee;
+  background: #f9fbff;
+  border-radius: 0 0 20px 20px;
 }
 
-.existing-comments {
-  margin-bottom: 8px;
-}
-
+/* Comment container flex */
 .comment {
-  font-size: 13px;
-  margin: 3px 0;
-  background: #f3f4f6;
-  padding: 6px 10px;
-  border-radius: 8px;
-}
-
-.add-comment input {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #c7d2fe;
-  outline: none;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+  background: #e3eaf5;
+  border-radius: 14px;
+  padding: 8px 14px;
   font-size: 14px;
-  transition: all 0.3s ease;
+  color: #333;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  animation: fadeSlideInComment 0.4s ease forwards;
 }
 
-.add-comment input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 6px rgba(79,70,229,0.5);
+/* Avatar style */
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 3px rgba(0,0,0,0.15);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Comment body container */
+.comment-body {
+  flex-grow: 1;
+  position: relative;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 650px) {
-  .feed-post {
-    width: 90%;
+/* Username */
+.comment-username {
+  font-weight: 700;
+  color: #1a2e6e;
+  margin-bottom: 4px;
+}
+
+/* Reaction buttons container */
+.comment-reactions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 16px;
+  color: #666;
+  position: relative;
+}
+
+/* Reaction button style */
+.comment-reaction-btn {
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #dbe9ff;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.comment-reaction-btn:hover {
+  background-color: #b0d2ff;
+  color: #1a2e6e;
+}
+
+/* Reaction picker toggle button */
+.comment-reaction-picker-toggle {
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #dbe9ff;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-reaction-picker-toggle:hover {
+  background-color: #b0d2ff;
+  color: #1a2e6e;
+}
+
+/* Reaction picker popup */
+.comment-reaction-picker {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  padding: 6px 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+
+.comment-reaction-picker-btn {
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.comment-reaction-picker-btn:hover {
+  transform: scale(1.3);
+}
+
+/* Reply button */
+.comment-reply-btn {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #457b9d;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.comment-reply-btn:hover {
+  color: #1a2e6e;
+}
+
+/* Reply input container */
+.comment-reply-input-container {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  gap: 8px;
+}
+
+/* Reply input field */
+.comment-input {
+  flex-grow: 1;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: none;
+  background: #dbe9ff;
+  font-size: 15px;
+  outline: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comment-input:focus {
+  background: #b0d2ff;
+  box-shadow: 0 0 8px rgba(70, 130, 180, 0.5);
+}
+
+/* Send button */
+.comment-send-btn {
+  background-color: #1a2e6e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.comment-send-btn:hover {
+  background-color: #457b9d;
+}
+
+/* Nested replies indentation */
+.comment-replies {
+  margin-left: 48px;
+  margin-top: 12px;
+  border-left: 2px solid #b0d2ff;
+  padding-left: 14px;
+}
+
+/* Smooth fade-in animation for comments */
+@keyframes fadeSlideInComment {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .feed-container {
+    max-width: 95%;
+    padding: 0 10px;
+  }
+  .feed-title {
+    font-size: 24px;
+  }
+  .feed-actions {
+    font-size: 20px;
   }
 }

@@ -31,6 +31,28 @@ export default function App() {
     { id: 2, name: "Buddy", image: "/assets/labrador.jpg" },
   ]);
 
+  // Posts state lifted here
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      title: "Fluffy just had a walk!",
+      content: "Check out the latest updates from pet lovers near you.",
+      image: "/assets/fluffy-walk.jpg",
+      liked: false,
+      comments: [],
+      showComments: false,
+    },
+    {
+      id: 2,
+      title: "New Puppy Listing",
+      content: "A cute Labrador is available for adoption.",
+      image: "/assets/labrador.jpg",
+      liked: false,
+      comments: [],
+      showComments: false,
+    },
+  ]);
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleLogin = (userData) => {
@@ -74,35 +96,99 @@ export default function App() {
       {/* Dashboard pages with global NavBar */}
       <Route
         path="/dashboard/feed"
-        element={user ? <DashboardPage><Feed /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <Feed posts={posts} setPosts={setPosts} />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
       <Route
         path="/dashboard/owner-profile"
-        element={user ? <DashboardPage><OwnerProfile pets={pets} setPets={setPets} /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <OwnerProfile pets={pets} setPets={setPets} posts={posts} setPosts={setPosts} />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
       <Route
         path="/dashboard/pet-profile/:id"
-        element={user ? <DashboardPage><PetProfile pets={pets} /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <PetProfile pets={pets} />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
       <Route
         path="/dashboard/add-pet"
-        element={user ? <DashboardPage><AddPet pets={pets} setPets={setPets} /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <AddPet pets={pets} setPets={setPets} />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
       <Route
         path="/dashboard/listings"
-        element={user ? <DashboardPage><Listings /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <Listings />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
       <Route
         path="/dashboard/transactions"
-        element={user ? <DashboardPage><Transactions /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <Transactions />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
       <Route
         path="/dashboard/messages"
-        element={user ? <DashboardPage><Messages /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <Messages />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
       <Route
         path="/dashboard/documents"
-        element={user ? <DashboardPage><Documents /></DashboardPage> : <Navigate replace to="/login" />}
+        element={
+          user ? (
+            <DashboardPage>
+              <Documents />
+            </DashboardPage>
+          ) : (
+            <Navigate replace to="/login" />
+          )
+        }
       />
 
       {/* Catch-all */}

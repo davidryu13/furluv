@@ -43,7 +43,7 @@ export default function Login({ onLogin }) {
               <input type={showPassword ? "text" : "password"} name="password" value={form.password} onChange={handleChange} required />
               <label>Password</label>
               <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? "🙈" : "👁️"}
+                {showPassword ? "" : ""}
               </span>
             </div>
 

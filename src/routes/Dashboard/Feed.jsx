@@ -1,29 +1,169 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/feed.css';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
+import Avatar from 'react-avatar';
 
-export default function Feed() {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: 'Fluffy just had a walk!',
-      content: 'Check out the latest updates from pet lovers near you.',
-      image: '/assets/fluffy-walk.jpg', // replace with your image
-      liked: false,
-      comments: ['So cute!', 'Love it!'],
-      showComments: false
-    },
-    {
-      id: 2,
-      title: 'New Puppy Listing',
-      content: 'A cute Labrador is available for adoption.',
-      image: '/assets/labrador.jpg', // replace with your image
-      liked: false,
-      comments: ['I want this puppy!', 'Adorable!'],
-      showComments: false
+function Comment({ postId, comment, onReact, onReply }) {
+  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [showMessageConfirm, setShowMessageConfirm] = useState(false);
+
+  const navigate = useNavigate();
+
+  const reactionsAvailable = ['👍', '❤️', '😂', '😮', '😢', '👏'];
+
+  const handleReplySubmit = () => {
+    if (replyText.trim()) {
+      onReply(comment.id, replyText);
+      setReplyText('');
+      setShowReplyInput(false);
     }
-  ]);
+  };
+
+  const handleReactionSelect = (reaction) => {
+    onReact(comment.id, reaction);
+    setShowReactionPicker(false);
+  };
+
+  const handleMessageClick = () => {
+    navigate('/message', { state: { user: comment.user } });
+    setShowMessageConfirm(false);
+  };
+
+  return (
+    <div className="comment">
+      <Avatar
+        name={comment.user.name}
+        round={true}
+        size="36"
+        className="comment-avatar"
+        onClick={() => setShowMessageConfirm(true)}
+        style={{ cursor: 'pointer' }}
+      />
+      <div className="comment-body">
+        <div
+          className="comment-username"
+          onClick={() => setShowMessageConfirm(true)}
+          style={{ cursor: 'pointer' }}
+        >
+          {comment.user.name}
+        </div>
+        <div>{comment.text}</div>
+
+        <div className="comment-reactions">
+          {comment.reactions && Object.entries(comment.reactions).length > 0 && (
+            Object.entries(comment.reactions).map(([reaction, count]) => (
+              <div
+                key={reaction}
+                className="comment-reaction-btn"
+                onClick={() => onReact(comment.id, reaction)}
+                title={`React with ${reaction}`}
+              >
+                {reaction} {count}
+              </div>
+            ))
+          )}
+
+          <div
+            className="comment-reaction-picker-toggle"
+            onClick={() => setShowReactionPicker(!showReactionPicker)}
+            title="Add reaction"
+          >
+            🐶
+          </div>
+
+          {showReactionPicker && (
+            <div className="comment-reaction-picker">
+              {reactionsAvailable.map((reaction) => (
+                <span
+                  key={reaction}
+                  className="comment-reaction-picker-btn"
+                  onClick={() => handleReactionSelect(reaction)}
+                >
+                  {reaction}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div
+          className="comment-reply-btn"
+          onClick={() => setShowReplyInput(!showReplyInput)}
+          tabIndex={0}
+          role="button"
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') setShowReplyInput(!showReplyInput);
+          }}
+        >
+          Reply
+        </div>
+
+        {showReplyInput && (
+          <div className="comment-reply-input-container">
+            <input
+              type="text"
+              className="comment-input"
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write a reply..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleReplySubmit();
+                }
+              }}
+              aria-label="Write a reply"
+              autoFocus
+            />
+            <button
+              className="comment-send-btn"
+              onClick={handleReplySubmit}
+              aria-label="Send reply"
+            >
+              Send
+            </button>
+          </div>
+        )}
+
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="comment-replies">
+            {comment.replies.map((reply) => (
+              <Comment
+                key={reply.id}
+                postId={postId}
+                comment={reply}
+                onReact={onReact}
+                onReply={onReply}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {showMessageConfirm && (
+        <div
+          className="message-confirm-popup"
+          onClick={() => setShowMessageConfirm(false)}
+        >
+          <div
+            className="message-confirm-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p>Message {comment.user.name}?</p>
+            <button onClick={handleMessageClick}>Message</button>
+            <button onClick={() => setShowMessageConfirm(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Feed({ posts, setPosts }) {
+  // posts & setPosts come from props (App.jsx)
 
   const toggleLike = (id) => {
     setPosts(posts.map(post => post.id === id ? { ...post, liked: !post.liked } : post));
@@ -33,30 +173,101 @@ export default function Feed() {
     setPosts(posts.map(post => post.id === id ? { ...post, showComments: !post.showComments } : post));
   };
 
-  const addComment = (id, comment) => {
-    if (!comment) return;
-    setPosts(posts.map(post => post.id === id ? { ...post, comments: [...post.comments, comment] } : post));
+  const addComment = (postId, commentText) => {
+    if (!commentText.trim()) return;
+
+    const newComment = {
+      id: Date.now(),
+      user: { name: 'You', avatar: 'https://i.pravatar.cc/150?u=you' },
+      text: commentText,
+      reactions: {},
+      replies: [],
+    };
+
+    setPosts(posts.map(post => {
+      if (post.id === postId) {
+        return { ...post, comments: [...post.comments, newComment] };
+      }
+      return post;
+    }));
+  };
+
+  const handleReact = (postId, commentId, reaction) => {
+    setPosts(posts.map(post => {
+      if (post.id !== postId) return post;
+
+      const addReaction = (comments) => {
+        return comments.map(c => {
+          if (c.id === commentId) {
+            const newReactions = { ...c.reactions };
+            newReactions[reaction] = (newReactions[reaction] || 0) + 1;
+            return { ...c, reactions: newReactions };
+          }
+          if (c.replies && c.replies.length > 0) {
+            return { ...c, replies: addReaction(c.replies) };
+          }
+          return c;
+        });
+      };
+
+      return { ...post, comments: addReaction(post.comments) };
+    }));
+  };
+
+  const handleReply = (postId, parentCommentId, replyText) => {
+    if (!replyText.trim()) return;
+
+    const newReply = {
+      id: Date.now(),
+      user: { name: 'You', avatar: 'https://i.pravatar.cc/150?u=you' },
+      text: replyText,
+      reactions: {},
+      replies: [],
+    };
+
+    setPosts(posts.map(post => {
+      if (post.id !== postId) return post;
+
+      const addReply = (comments) => {
+        return comments.map(c => {
+          if (c.id === parentCommentId) {
+            return { ...c, replies: [...c.replies, newReply] };
+          }
+          if (c.replies && c.replies.length > 0) {
+            return { ...c, replies: addReply(c.replies) };
+          }
+          return c;
+        });
+      };
+
+      return { ...post, comments: addReply(post.comments) };
+    }));
   };
 
   return (
     <div className="feed-page">
-      <h2>Feed</h2>
+      <h2 className="feed-title">Feed</h2>
+
       <div className="feed-container">
         {posts.map(post => (
-          <div key={post.id} className="feed-post">
-            <div className="post-image">
-              {post.image && <img src={post.image} alt={post.title} />}
-            </div>
-            <div className="post-content">
+          <div key={post.id} className="feed-card">
+            <img src={post.image} alt={post.title} className="feed-img" />
+
+            <div className="feed-caption">
               <h3>{post.title}</h3>
               <p>{post.content}</p>
             </div>
 
             <div className="feed-actions">
-              <span onClick={() => toggleLike(post.id)}>
-                {post.liked ? <AiFillHeart className="heart liked" /> : <AiOutlineHeart className="heart" />}
+              <span onClick={() => toggleLike(post.id)} style={{ cursor: 'pointer' }}>
+                {post.liked ? (
+                  <AiFillHeart className="heart liked" />
+                ) : (
+                  <AiOutlineHeart className="heart" />
+                )}
               </span>
-              <span onClick={() => toggleComments(post.id)}>
+
+              <span onClick={() => toggleComments(post.id)} style={{ cursor: 'pointer' }}>
                 <FaRegComment className="comment-icon" />
               </span>
             </div>
@@ -64,22 +275,28 @@ export default function Feed() {
             {post.showComments && (
               <div className="comment-section">
                 <div className="existing-comments">
-                  {post.comments.map((c, idx) => (
-                    <p key={idx} className="comment">{c}</p>
+                  {post.comments.map((comment) => (
+                    <Comment
+                      key={comment.id}
+                      postId={post.id}
+                      comment={comment}
+                      onReact={(commentId, reaction) => handleReact(post.id, commentId, reaction)}
+                      onReply={(commentId, replyText) => handleReply(post.id, commentId, replyText)}
+                    />
                   ))}
                 </div>
-                <div className="add-comment">
-                  <input
-                    type="text"
-                    placeholder="Add a comment..."
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        addComment(post.id, e.target.value);
-                        e.target.value = '';
-                      }
-                    }}
-                  />
-                </div>
+
+                <input
+                  type="text"
+                  placeholder="Add a comment..."
+                  className="comment-input"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      addComment(post.id, e.target.value);
+                      e.target.value = '';
+                    }
+                  }}
+                />
               </div>
             )}
           </div>
