@@ -5,13 +5,14 @@
   flex-direction: column;
   background: #eef2ff;
   padding-bottom: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Messages container: sidebar + chat window */
 .messages-container {
   flex: 1;
   display: flex;
-  max-width: 1400px; /* wider container */
+  max-width: 1400px;
   margin: 25px auto;
   gap: 25px;
 }
@@ -25,6 +26,8 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  max-height: 85vh;
 }
 
 .chat-sidebar h3 {
@@ -43,6 +46,7 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
+  position: relative;
 }
 
 .chat-contact.active,
@@ -52,11 +56,12 @@
 }
 
 .contact-profile {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%; /* fully circular */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   object-fit: cover;
   border: 2px solid #4f46e5;
+  flex-shrink: 0;
 }
 
 /* Status dots */
@@ -65,6 +70,8 @@
   height: 12px;
   border-radius: 50%;
   margin-left: auto;
+  border: 2px solid white;
+  box-sizing: content-box;
 }
 
 .status-dot.online {
@@ -79,6 +86,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow: hidden;
 }
 
 .contact-name {
@@ -86,29 +94,47 @@
   color: #1f2937;
   margin: 0;
   font-size: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .contact-last {
   font-size: 13px;
   color: #6b7280;
   margin: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 /* Chat window */
 .chat-window {
-  flex: 1.5; /* make chat window wider than sidebar */
+  flex: 1.5;
   background: white;
   border-radius: 20px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   display: flex;
   flex-direction: column;
   padding: 25px;
+  max-height: 85vh;
 }
 
 .chat-window h3 {
   color: #4f46e5;
   margin-bottom: 15px;
-  font-size: 20px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.chat-window h3 .contact-profile {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #4f46e5;
+  margin-right: 12px;
+  flex-shrink: 0;
 }
 
 /* Messages area */
@@ -120,6 +146,22 @@
   gap: 12px;
   padding-right: 5px;
   margin-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #4f46e5 #f3f4f6;
+}
+
+.messages-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-area::-webkit-scrollbar-thumb {
+  background: #4f46e5;
+  border-radius: 3px;
+}
+
+.messages-area::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
 }
 
 .chat-message {
@@ -183,21 +225,6 @@
   transform: scale(1.03);
 }
 
-/* Scrollbar customization */
-.messages-area::-webkit-scrollbar {
-  width: 6px;
-}
-
-.messages-area::-webkit-scrollbar-thumb {
-  background: #4f46e5;
-  border-radius: 3px;
-}
-
-.messages-area::-webkit-scrollbar-track {
-  background: #f3f4f6;
-  border-radius: 3px;
-}
-
 /* Mobile */
 @media (max-width: 768px) {
   .messages-container {
@@ -209,10 +236,23 @@
     width: 100%;
     flex-direction: row;
     overflow-x: auto;
+    max-height: 70px;
+    padding: 10px;
+  }
+
+  .chat-contact {
+    flex-direction: column;
+    justify-content: center;
+    min-width: 80px;
+  }
+
+  .contact-info {
+    display: none; /* hide name & last message on small screens */
   }
 
   .chat-window {
     width: 100%;
     margin-top: 15px;
+    max-height: none;
   }
 }

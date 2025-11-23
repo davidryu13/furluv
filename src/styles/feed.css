@@ -306,3 +306,85 @@
     font-size: 20px;
   }
 }
+
+/* Message confirm modal styles */
+.message-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.message-confirm-modal {
+  background: white;
+  padding: 24px 36px;
+  border-radius: 16px;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.message-confirm-text {
+  font-size: 18px;
+  margin-bottom: 24px;
+  color: #003366;
+  font-weight: 600;
+}
+
+.message-confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* Message button - dark navy blue with white text */
+.btn-message {
+  background-color: #001f4d !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px 28px !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: none !important;
+}
+
+.btn-message:hover,
+.btn-message:focus {
+  background-color: #003366 !important;
+  outline: none !important;
+}
+
+/* Cancel button - gray background and black text forced */
+.btn-cancel {
+  background-image: none !important;   /* REMOVE any gradient background */
+  background: #ccc !important;         /* Solid gray */
+  color: #000 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px 28px !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: none !important;
+  box-shadow: none !important;         /* REMOVE any shadow */
+}
+
+.btn-cancel:hover,
+.btn-cancel:focus {
+  background-image: none !important;
+  background: #ccc !important;
+  color: #000 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}

@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -6,6 +5,7 @@ import Landing from "./routes/Landing";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
 
+// Dashboard container component
 import Dashboard from "./routes/Dashboard/Dashboard";
 
 export default function App() {
@@ -52,7 +52,7 @@ export default function App() {
 
   return (
     <Routes>
-      {/* Landing and auth */}
+      {/* Public Routes */}
       <Route
         path="/"
         element={!user ? <Landing /> : <Navigate replace to="/dashboard/feed" />}
@@ -66,7 +66,7 @@ export default function App() {
         element={!user ? <Register /> : <Navigate replace to="/dashboard/feed" />}
       />
 
-      {/* Dashboard */}
+      {/* Protected Dashboard Routes */}
       <Route
         path="/dashboard/*"
         element={

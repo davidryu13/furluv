@@ -1,4 +1,5 @@
-import React, { useState, memo } from 'react';
+// src/routes/Dashboard/Feed.jsx
+import React, { useState, memo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/feed.css';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
@@ -30,7 +31,7 @@ const Comment = memo(function Comment({ postId, comment, onReact, onReply }) {
   };
 
   const handleMessageClick = () => {
-    navigate('/message', { state: { user: comment.user } });
+    navigate('/dashboard/messages', { state: { user: comment.user } });
     setShowMessageConfirm(false);
   };
 
@@ -144,16 +145,18 @@ const Comment = memo(function Comment({ postId, comment, onReact, onReply }) {
 
       {showMessageConfirm && (
         <div
-          className="message-confirm-popup"
+          className="message-confirm-overlay"
           onClick={() => setShowMessageConfirm(false)}
         >
           <div
-            className="message-confirm-content"
+            className="message-confirm-modal"
             onClick={(e) => e.stopPropagation()}
           >
-            <p>Message {comment.user.name}?</p>
-            <button onClick={handleMessageClick}>Message</button>
-            <button onClick={() => setShowMessageConfirm(false)}>Cancel</button>
+            <p className="message-confirm-text">Message <strong>{comment.user.name}</strong>?</p>
+            <div className="message-confirm-buttons">
+              <button className="btn btn-message" onClick={handleMessageClick}>Message</button>
+              <button className="btn btn-cancel" onClick={() => setShowMessageConfirm(false)}>Cancel</button>
+            </div>
           </div>
         </div>
       )}
@@ -226,6 +229,42 @@ function FeedCard({ post, toggleLike, toggleComments, handleReact, handleReply }
 }
 
 export default function Feed({ posts, setPosts }) {
+  // Add default comments on mount if none exist (testing only)
+  useEffect(() => {
+    if (posts.length === 0) return;
+    let changed = false;
+    const newPosts = posts.map(post => {
+      if (!post.comments || post.comments.length === 0) {
+        changed = true;
+        return {
+          ...post,
+          showComments: true,
+          comments: [
+            {
+              id: 101,
+              user: { name: "Alice" },
+              text: "Great post!",
+              reactions: { "❤️": 2 },
+              replies: [],
+            },
+            {
+              id: 102,
+              user: { name: "Bob" },
+              text: "Thanks for sharing.",
+              reactions: {},
+              replies: [],
+            }
+          ],
+        };
+      }
+      return post;
+    });
+
+    if (changed) {
+      setPosts(newPosts);
+    }
+  }, [posts, setPosts]);
+
   const toggleLike = (id) => {
     setPosts((prev) =>
       prev.map((post) =>
