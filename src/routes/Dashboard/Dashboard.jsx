@@ -11,7 +11,7 @@ import Transactions from "./Transactions";
 import OwnerProfile from "./OwnerProfile";
 import AddPet from "./AddPet";
 
-export default function Dashboard({ user, onLogout, pets, setPets }) {
+export default function Dashboard({ user, onLogout, pets, setPets, posts, setPosts }) {
   return (
     <div className="dashboard no-sidepanels">
       {/* Top Navigation Bar */}
@@ -23,19 +23,24 @@ export default function Dashboard({ user, onLogout, pets, setPets }) {
           {/* Default dashboard route */}
           <Route path="/" element={<Navigate to="feed" />} />
 
-          {/* Dashboard pages */}
-          <Route path="feed" element={<Feed />} />
-          <Route path="pet-profile/:id" element={<PetProfile pets={pets} />} /> {/* Dynamic pet id */}
+          {/* Pass pets and posts state down to components */}
+          <Route path="feed" element={<Feed posts={posts} setPosts={setPosts} />} />
+
+          <Route path="pet-profile/:id" element={<PetProfile pets={pets} />} />
           <Route path="listings" element={<Listings />} />
           <Route path="transactions" element={<Transactions />} />
           <Route
             path="owner-profile"
-            element={<OwnerProfile pets={pets} setPets={setPets} />}
+            element={
+              <OwnerProfile
+                pets={pets}
+                setPets={setPets}
+                posts={posts}
+                setPosts={setPosts}
+              />
+            }
           />
-           <Route
-    path="add-pet"
-    element={<AddPet pets={pets} setPets={setPets} />} 
-    />
+          <Route path="add-pet" element={<AddPet pets={pets} setPets={setPets} />} />
 
           {/* Catch-all */}
           <Route path="*" element={<div>Page not found</div>} />

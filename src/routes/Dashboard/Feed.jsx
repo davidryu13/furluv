@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/feed.css';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
 import Avatar from 'react-avatar';
 
-function Comment({ postId, comment, onReact, onReply }) {
+// Memoized Comment to prevent unnecessary re-renders
+const Comment = memo(function Comment({ postId, comment, onReact, onReply }) {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [showReactionPicker, setShowReactionPicker] = useState(false);
@@ -54,7 +55,7 @@ function Comment({ postId, comment, onReact, onReply }) {
         <div>{comment.text}</div>
 
         <div className="comment-reactions">
-          {comment.reactions && Object.entries(comment.reactions).length > 0 && (
+          {comment.reactions && Object.entries(comment.reactions).length > 0 &&
             Object.entries(comment.reactions).map(([reaction, count]) => (
               <div
                 key={reaction}
@@ -65,7 +66,7 @@ function Comment({ postId, comment, onReact, onReply }) {
                 {reaction} {count}
               </div>
             ))
-          )}
+          }
 
           <div
             className="comment-reaction-picker-toggle"
@@ -111,9 +112,7 @@ function Comment({ postId, comment, onReact, onReply }) {
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Write a reply..."
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleReplySubmit();
-                }
+                if (e.key === 'Enter') handleReplySubmit();
               }}
               aria-label="Write a reply"
               autoFocus
@@ -160,58 +159,110 @@ function Comment({ postId, comment, onReact, onReply }) {
       )}
     </div>
   );
+});
+
+// FeedCard without animation
+function FeedCard({ post, toggleLike, toggleComments, handleReact, handleReply }) {
+  return (
+    <div className="feed-card">
+      <img src={post.image} alt={post.title} className="feed-img" />
+
+      <div className="feed-caption">
+        <h3>{post.title}</h3>
+        <p>{post.content}</p>
+      </div>
+
+      <div className="feed-actions">
+        <span onClick={() => toggleLike(post.id)} style={{ cursor: 'pointer' }}>
+          {post.liked ? (
+            <AiFillHeart className="heart liked" />
+          ) : (
+            <AiOutlineHeart className="heart" />
+          )}
+        </span>
+
+        <span onClick={() => toggleComments(post.id)} style={{ cursor: 'pointer' }}>
+          <FaRegComment className="comment-icon" />
+        </span>
+      </div>
+
+      {post.showComments && (
+        <div className="comment-section">
+          <div className="existing-comments">
+            {post.comments.map((comment) => (
+              <Comment
+                key={comment.id}
+                postId={post.id}
+                comment={comment}
+                onReact={(commentId, reaction) =>
+                  handleReact(post.id, commentId, reaction)
+                }
+                onReply={(commentId, replyText) =>
+                  handleReply(post.id, commentId, replyText)
+                }
+              />
+            ))}
+          </div>
+
+          <input
+            type="text"
+            placeholder="Add a comment..."
+            className="comment-input"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                const value = e.target.value.trim();
+                if (value) {
+                  handleReply(post.id, null, value);
+                  e.target.value = '';
+                }
+              }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function Feed({ posts, setPosts }) {
-  // posts & setPosts come from props (App.jsx)
-
   const toggleLike = (id) => {
-    setPosts(posts.map(post => post.id === id ? { ...post, liked: !post.liked } : post));
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.id === id ? { ...post, liked: !post.liked } : post
+      )
+    );
   };
 
   const toggleComments = (id) => {
-    setPosts(posts.map(post => post.id === id ? { ...post, showComments: !post.showComments } : post));
-  };
-
-  const addComment = (postId, commentText) => {
-    if (!commentText.trim()) return;
-
-    const newComment = {
-      id: Date.now(),
-      user: { name: 'You', avatar: 'https://i.pravatar.cc/150?u=you' },
-      text: commentText,
-      reactions: {},
-      replies: [],
-    };
-
-    setPosts(posts.map(post => {
-      if (post.id === postId) {
-        return { ...post, comments: [...post.comments, newComment] };
-      }
-      return post;
-    }));
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.id === id ? { ...post, showComments: !post.showComments } : post
+      )
+    );
   };
 
   const handleReact = (postId, commentId, reaction) => {
-    setPosts(posts.map(post => {
-      if (post.id !== postId) return post;
+    setPosts((prev) =>
+      prev.map((post) => {
+        if (post.id !== postId) return post;
 
-      const addReaction = (comments) => {
-        return comments.map(c => {
-          if (c.id === commentId) {
-            const newReactions = { ...c.reactions };
-            newReactions[reaction] = (newReactions[reaction] || 0) + 1;
-            return { ...c, reactions: newReactions };
-          }
-          if (c.replies && c.replies.length > 0) {
-            return { ...c, replies: addReaction(c.replies) };
-          }
-          return c;
-        });
-      };
+        const addReaction = (comments) =>
+          comments.map((c) => {
+            if (c.id === commentId) {
+              const newReactions = { ...c.reactions };
+              newReactions[reaction] = (newReactions[reaction] || 0) + 1;
+              return { ...c, reactions: newReactions };
+            }
+            if (c.replies?.length > 0) {
+              return { ...c, replies: addReaction(c.replies) };
+            }
+            return c;
+          });
 
-      return { ...post, comments: addReaction(post.comments) };
-    }));
+        return { ...post, comments: addReaction(post.comments) };
+      })
+    );
   };
 
   const handleReply = (postId, parentCommentId, replyText) => {
@@ -225,23 +276,28 @@ export default function Feed({ posts, setPosts }) {
       replies: [],
     };
 
-    setPosts(posts.map(post => {
-      if (post.id !== postId) return post;
+    setPosts((prev) =>
+      prev.map((post) => {
+        if (post.id !== postId) return post;
 
-      const addReply = (comments) => {
-        return comments.map(c => {
-          if (c.id === parentCommentId) {
-            return { ...c, replies: [...c.replies, newReply] };
-          }
-          if (c.replies && c.replies.length > 0) {
-            return { ...c, replies: addReply(c.replies) };
-          }
-          return c;
-        });
-      };
+        if (parentCommentId === null) {
+          return { ...post, comments: [...post.comments, newReply] };
+        }
 
-      return { ...post, comments: addReply(post.comments) };
-    }));
+        const addReply = (comments) =>
+          comments.map((c) => {
+            if (c.id === parentCommentId) {
+              return { ...c, replies: [...c.replies, newReply] };
+            }
+            if (c.replies?.length > 0) {
+              return { ...c, replies: addReply(c.replies) };
+            }
+            return c;
+          });
+
+        return { ...post, comments: addReply(post.comments) };
+      })
+    );
   };
 
   return (
@@ -249,57 +305,15 @@ export default function Feed({ posts, setPosts }) {
       <h2 className="feed-title">Feed</h2>
 
       <div className="feed-container">
-        {posts.map(post => (
-          <div key={post.id} className="feed-card">
-            <img src={post.image} alt={post.title} className="feed-img" />
-
-            <div className="feed-caption">
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-            </div>
-
-            <div className="feed-actions">
-              <span onClick={() => toggleLike(post.id)} style={{ cursor: 'pointer' }}>
-                {post.liked ? (
-                  <AiFillHeart className="heart liked" />
-                ) : (
-                  <AiOutlineHeart className="heart" />
-                )}
-              </span>
-
-              <span onClick={() => toggleComments(post.id)} style={{ cursor: 'pointer' }}>
-                <FaRegComment className="comment-icon" />
-              </span>
-            </div>
-
-            {post.showComments && (
-              <div className="comment-section">
-                <div className="existing-comments">
-                  {post.comments.map((comment) => (
-                    <Comment
-                      key={comment.id}
-                      postId={post.id}
-                      comment={comment}
-                      onReact={(commentId, reaction) => handleReact(post.id, commentId, reaction)}
-                      onReply={(commentId, replyText) => handleReply(post.id, commentId, replyText)}
-                    />
-                  ))}
-                </div>
-
-                <input
-                  type="text"
-                  placeholder="Add a comment..."
-                  className="comment-input"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      addComment(post.id, e.target.value);
-                      e.target.value = '';
-                    }
-                  }}
-                />
-              </div>
-            )}
-          </div>
+        {posts.map((post) => (
+          <FeedCard
+            key={post.id}
+            post={post}
+            toggleLike={toggleLike}
+            toggleComments={toggleComments}
+            handleReact={handleReact}
+            handleReply={handleReply}
+          />
         ))}
       </div>
     </div>
