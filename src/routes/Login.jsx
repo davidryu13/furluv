@@ -42,9 +42,6 @@ export default function Login({ onLogin }) {
             <div className="input-group password-group">
               <input type={showPassword ? "text" : "password"} name="password" value={form.password} onChange={handleChange} required />
               <label>Password</label>
-              <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? "" : ""}
-              </span>
             </div>
 
             <button className="btn" type="submit">Login</button>

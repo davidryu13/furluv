@@ -18,23 +18,41 @@ export default function Dashboard({ user, onLogout, pets, setPets, posts, setPos
       {/* Global Navbar */}
       <Navbar user={user} onLogout={onLogout} />
 
-      {/* Main dashboard content */}
+      {/* Main Dashboard Content */}
       <div className="main-content">
         <Routes>
           {/* Default route */}
           <Route path="/" element={<Navigate to="feed" />} />
 
-          {/* Dashboard pages */}
+          {/* Dashboard Pages */}
           <Route
             path="feed"
             element={<Feed posts={posts} setPosts={setPosts} />}
           />
+
           <Route
             path="owner-profile"
-            element={<OwnerProfile pets={pets} setPets={setPets} posts={posts} setPosts={setPosts} />}
+            element={
+              <OwnerProfile
+                pets={pets}
+                setPets={setPets}
+                posts={posts}
+                setPosts={setPosts}
+              />
+            }
           />
-          <Route path="pet-profile/:id" element={<PetProfile pets={pets} />} />
-          <Route path="add-pet" element={<AddPet pets={pets} setPets={setPets} />} />
+
+          <Route
+            path="pet-profile/:id"
+            element={<PetProfile pets={pets} />}
+          />
+
+          {/* ✅ Add Pet route */}
+          <Route
+            path="add-pet"
+            element={<AddPet pets={pets} setPets={setPets} />}
+          />
+
           <Route path="listings" element={<Listings />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="messages" element={<Messages />} />

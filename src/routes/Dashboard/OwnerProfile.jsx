@@ -22,17 +22,11 @@ export default function OwnerProfile({ pets = [], setPets, posts = [], setPosts 
   const [editData, setEditData] = useState({ ...ownerInfo });
 
   // ==========================
-  // ADD PET
+  // NAVIGATE TO ADD PET PAGE
   // ==========================
-  const addPet = () => {
-    const newPetName = prompt("Enter new pet name:");
-    if (!newPetName) return;
-    const newPet = {
-      id: pets.length + 1,
-      name: newPetName,
-      image: "/assets/default-pet.jpg",
-    };
-    setPets([...pets, newPet]);
+  const goToAddPet = () => {
+    // navigate to the nested dashboard route for adding a pet
+    navigate("/dashboard/add-pet");
   };
 
   // ==========================
@@ -167,7 +161,8 @@ export default function OwnerProfile({ pets = [], setPets, posts = [], setPosts 
             </div>
           ))}
 
-          <div className="pet-card add-pet" onClick={addPet}>
+          {/* Add Pet card now navigates to the AddPet page */}
+          <div className="pet-card add-pet" onClick={goToAddPet}>
             <FaPlus className="plus-icon" />
           </div>
         </div>
