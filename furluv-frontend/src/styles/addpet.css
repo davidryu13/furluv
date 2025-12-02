@@ -1,0 +1,205 @@
+:root{
+  --accent-1: #4f46e5;
+  --accent-2: #4338ca;
+  --muted: #6b7280;
+  --surface: linear-gradient(145deg,#ffffff,#f7f7fb);
+  --card-shadow: 0 20px 40px rgba(15,23,42,0.06);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, "Helvetica Neue", Arial;
+}
+
+/* Container */
+.add-pet-page {
+  max-width: 900px;
+  margin: 2.5rem auto;
+  background: var(--surface);
+  padding: 2.25rem;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+/* Header */
+.add-pet-page h2 {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  font-size: 1.9rem;
+  color: var(--accent-1);
+  letter-spacing: -0.2px;
+}
+
+/* Form grid */
+.add-pet-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* On wider screens show two columns for inputs */
+@media (min-width: 760px) {
+  .add-pet-form {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.25rem;
+    align-items: start;
+  }
+
+  /* Make the main long inputs (like name) span both columns */
+  .add-pet-form .span-2 {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Label */
+.add-pet-form label {
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Input styles */
+.add-pet-form input[type="text"],
+.add-pet-form input[type="number"],
+.add-pet-form select {
+  width: 100%;
+  padding: 0.78rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid #e6e9ef;
+  background: #fff;
+  box-sizing: border-box;
+  font-size: 0.98rem;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .12s ease;
+}
+
+.add-pet-form input[type="text"]:focus,
+.add-pet-form input[type="number"]:focus,
+.add-pet-form select:focus {
+  outline: none;
+  border-color: var(--accent-1);
+  box-shadow: 0 6px 18px rgba(79,70,229,0.08);
+  transform: translateY(-1px);
+}
+
+/* Image uploader block spans full width */
+.image-uploader {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: linear-gradient(180deg,#fbfbff,#ffffff);
+  border: 1px dashed #e6e9ef;
+}
+
+/* Hidden actual file input */
+.image-uploader input[type="file"] {
+  display: none;
+}
+
+/* Upload button */
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  color: white;
+  box-shadow: 0 8px 20px rgba(67,56,202,0.18);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.upload-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(67,56,202,0.20); }
+
+/* Image preview */
+.image-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 12px 28px rgba(2,6,23,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: #f8fafc;
+}
+
+.image-preview img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* Small helper text */
+.help {
+  color: var(--muted);
+  font-size: 0.87rem;
+}
+
+/* Action buttons row spans full width */
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 4px;
+}
+
+/* Cancel (ghost) */
+.btn-ghost {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #e6e9ef;
+  background: white;
+  color: #374151;
+  cursor: pointer;
+  font-weight: 600;
+  min-width: 110px;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn-ghost:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(2,6,23,0.06); }
+
+/* Primary action */
+.btn-primary {
+  padding: 0.78rem 1.05rem;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 140px;
+  box-shadow: 0 12px 30px rgba(79,70,229,0.12);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+/* Back button (small) */
+.back-button {
+  display: inline-flex;
+  gap: .5rem;
+  align-items:center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--accent-1);
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  cursor: pointer;
+}
+
+/* Mobile tweaks */
+@media (max-width: 759px) {
+  .image-preview { width: 100px; height: 100px; }
+  .btn-primary, .btn-ghost { min-width: 100px; font-size: 0.95rem; }
+}
