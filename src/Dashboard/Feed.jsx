@@ -5,7 +5,7 @@ import '../styles/feed.css';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { FaRegComment, FaPlus } from 'react-icons/fa';
 import Avatar from 'react-avatar';
-import { getPosts, createPost, getPetOwnerById } from '../utils/api';
+import { getPosts, createPost, getPetOwnerById, deletePost } from '../utils/api';
 
 // Memoized Comment to prevent unnecessary re-renders
 const Comment = memo(function Comment({ postId, comment, onReact, onReply }) {
@@ -166,7 +166,7 @@ const Comment = memo(function Comment({ postId, comment, onReact, onReply }) {
 });
 
 // FeedCard without animation
-function FeedCard({ post, toggleLike, toggleComments, handleReact, handleReply }) {
+function FeedCard({ post, toggleLike, toggleComments, handleReact, handleReply, onDelete, isOwnPost }) {
   return (
     <div className="feed-card">
       {post.image && (
@@ -194,6 +194,21 @@ function FeedCard({ post, toggleLike, toggleComments, handleReact, handleReply }
         <span onClick={() => toggleComments(post.id)} style={{ cursor: 'pointer' }}>
           <FaRegComment className="comment-icon" />
         </span>
+
+        {isOwnPost && (
+          <span
+            onClick={() => onDelete(post.id)}
+            style={{
+              cursor: 'pointer',
+              color: '#ef4444',
+              fontSize: '14px',
+              marginLeft: 'auto',
+              fontWeight: 'bold'
+            }}
+          >
+            Delete
+          </span>
+        )}
       </div>
 
       {post.showComments && (
@@ -256,6 +271,19 @@ export default function Feed({ posts, setPosts }) {
   const [petOwner, setPetOwner] = useState(null);
   const [petsLoading, setPetsLoading] = useState(true);
   const [editData, setEditData] = useState({ ...ownerInfo });
+
+  // Delete post handler
+  const deletePostHandler = async (postId) => {
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      try {
+        await deletePost(postId);
+        setPosts((prev) => prev.filter((post) => post.id !== postId));
+      } catch (err) {
+        console.error('Failed to delete post', err);
+        alert('Failed to delete post');
+      }
+    }
+  };
 
   // Load creator name from backend on mount
   useEffect(() => {
@@ -550,6 +578,8 @@ export default function Feed({ posts, setPosts }) {
               toggleComments={toggleComments}
               handleReact={handleReact}
               handleReply={handleReply}
+              onDelete={deletePostHandler}
+              isOwnPost={post.creatorName === creatorName}
             />
           ))
         )}
